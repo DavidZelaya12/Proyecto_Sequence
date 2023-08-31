@@ -8,6 +8,8 @@ public class Main extends javax.swing.JFrame {
     Player player;
     Funciones funciones;
 
+    //hola
+    
     public Main() {
         initComponents();
         this.funciones = new Funciones();
