@@ -1,6 +1,7 @@
 package Proyecto;
 
 import javax.swing.JOptionPane;
+import Tablero.*;
 
 public class Oponente extends javax.swing.JFrame {
     Player player;
@@ -91,8 +92,8 @@ public class Oponente extends javax.swing.JFrame {
     
         String usuario2=player2.getText();
              player.setOponente(usuario2);
-            //Juego jugar=new Juego(player,main);
-            //jugar.setVisible(true);
+            Juego jugar=new Juego(player,main);
+            jugar.setVisible(true);
             this.dispose();
     }//GEN-LAST:event_ChooseActionPerformed
 
