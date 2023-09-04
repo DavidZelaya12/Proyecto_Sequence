@@ -20,6 +20,7 @@ public class Tablero extends JPanel {
     ArrayList<Cartass> ManoP2;
 
     private JTextArea txtAreaEliminados;
+    private JPanel hi;
 
     private JLabel Turnos;
     private boolean SeSeleccionoCasilla = false;
@@ -38,12 +39,12 @@ public class Tablero extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        int imageWidth = getWidth() / 10;
-        int imageHeight = getHeight() / 10;
+       // int imageWidth = getWidth() / 10;
+      //  int imageHeight = getHeight() / 10;
         g.drawImage(tablero, 0, 0, getWidth(), getHeight(), this);
     }
 
-    public Tablero(Player player, Main main, JTextArea txtAreaEliminados, JLabel Turnos, Juego juego) {
+    public Tablero(Player player, Main main, JTextArea txtAreaEliminados, JLabel Turnos, Juego juego, JPanel hola) {
 
         ManoP1 = new ArrayList<>();
         ManoP2 = new ArrayList<>();
@@ -52,20 +53,28 @@ public class Tablero extends JPanel {
         this.txtAreaEliminados = txtAreaEliminados;
         this.Turnos = Turnos;
         this.juego = juego;
+        this.hi=hola;
 
-        setLayout(new GridLayout(11, 11));
+        setLayout(new GridLayout(10, 10));
+        hi.setLayout(new GridLayout(1,Cartas+1));
 
-        //ImageIcon fondo = new ImageIcon("src/img/Tablero.jpg");
-        //tablero = fondo.getImage();
+        ImageIcon fondo = new ImageIcon("src/img/Taablero.jpg");
+        tablero = fondo.getImage();
         casillas = new Casillas[11][10];
 
-        for (int filas = 0; filas < 11; filas++) {
+        for (int filas = 0; filas < 10; filas++) {
             for (int columnas = 0; columnas < 10; columnas++) {
                 Casillas ficha = new Casillas(filas, columnas, null);
                 casillas[filas][columnas] = ficha;
                 add(casillas[filas][columnas].label);
             }
         }
+            for (int columnas = 0; columnas < 10; columnas++) {
+                Casillas ficha = new Casillas(10, columnas, null);
+                casillas[10][columnas] = ficha;
+                hola.add(casillas[10][columnas].label);
+            }
+        
 
         MouseAdapter mouseAdapter = new MouseAdapter() {
             @Override
@@ -129,13 +138,13 @@ public class Tablero extends JPanel {
     public void añadirCarta(ArrayList<Cartass> hi){
         Random random = new Random();
         
-            if(ManoP1.size()<4){
+            if(ManoP1.size()<Cartas){
                 
             int hola=random.nextInt(hi.size());
-            Cartass ficha=BarajaGeneral.get(hola);
-            hi.add(ficha);    
+            Cartass Carta=BarajaGeneral.get(hola);
+            hi.add(Carta);    
             BarajaGeneral.remove(hola);
-            JOptionPane.showMessageDialog(null, "Se añadio un "+ficha.NombreCarta+" a tu baraja");
+            JOptionPane.showMessageDialog(null, "Se añadio un "+Carta.NombreCarta+" a tu baraja");
             CambiarManos(hi);
             }else{
                 JOptionPane.showMessageDialog(null, "Error: mano llena");

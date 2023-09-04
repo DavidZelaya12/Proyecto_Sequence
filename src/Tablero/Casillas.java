@@ -53,26 +53,6 @@ public class Casillas {
         }        
     }
     
-    public void esconderCasilla(boolean esconder) {
-        if (esconder) {
-            if (Carta.iconoEscondido != null) {
-                label.setIcon(Carta.iconoEscondido);
-                label.repaint();
-            } else {
-                label.setIcon(null);
-                label.setText("???");
-            }  
-        } else {
-            if (Carta.icono != null) {
-                label.setIcon(Carta.icono);
-            }
-            else
-                label.setText(Carta.NombreCarta);
-        }
-    } 
-    
-   
-    
     
     
 }
