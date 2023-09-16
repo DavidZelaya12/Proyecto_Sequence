@@ -5,8 +5,8 @@ import java.io.*;
 
 public class Funciones {
 
-    private Player[] players;
-    private int tamaño;
+    private static Player[] players;
+    private static int tamaño;
     RandomAccessFile Usuarios;
 
     public Funciones() {
@@ -30,7 +30,18 @@ public class Funciones {
         
     }
     
-    
+        public static ArrayList getPlayers() {
+      ArrayList<Player> Jugadores=new ArrayList<>();
+   
+      for(int i=0;i<tamaño;i++){
+          if(players[i]!=null){
+              Jugadores.add(players[i]);
+          }
+      }
+
+        return Jugadores;
+    }
+
     
     public void llenarArreglo()throws IOException{
     Usuarios.seek(0);
