@@ -30,7 +30,7 @@ public class Menu extends javax.swing.JFrame {
 
         jPanel1.setOpaque(false);
 
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/playButton.png"))); // NOI18N
+        jButton1.setIcon(new javax.swing.ImageIcon("src/img/playButton.png"));
         jButton1.setBorderPainted(false);
         jButton1.setContentAreaFilled(false);
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -39,7 +39,7 @@ public class Menu extends javax.swing.JFrame {
             }
         });
 
-        jButton5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/logoutButton.png"))); // NOI18N
+        jButton5.setIcon(new javax.swing.ImageIcon("src/img/logoutButton.png"));
         jButton5.setContentAreaFilled(false);
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -47,7 +47,7 @@ public class Menu extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/configButton.png"))); // NOI18N
+        jButton2.setIcon(new javax.swing.ImageIcon("src/img/configButton.png"));
         jButton2.setBorderPainted(false);
         jButton2.setContentAreaFilled(false);
         jButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -56,7 +56,7 @@ public class Menu extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/reportsButton.png"))); // NOI18N
+        jButton3.setIcon(new javax.swing.ImageIcon("src/img/reportsButton.png"));
         jButton3.setBorderPainted(false);
         jButton3.setContentAreaFilled(false);
         jButton3.addActionListener(new java.awt.event.ActionListener() {
@@ -92,7 +92,7 @@ public class Menu extends javax.swing.JFrame {
                 .addGap(186, 186, 186))
         );
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/MenuBackground.png"))); // NOI18N
+        jLabel1.setIcon(new javax.swing.ImageIcon("src/img/MenuBackground.png"));
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
