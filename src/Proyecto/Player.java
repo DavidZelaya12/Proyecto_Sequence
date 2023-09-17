@@ -14,7 +14,7 @@ public class Player {
     private String oponente;
     ArrayList<Cartass>baraja;
     public String color="Amarilla";
-    
+     private int equipo=0;
     RandomAccessFile logs;
     
 public Player(String user,String password){
@@ -30,6 +30,11 @@ public Player(String user,String password){
             System.out.println("nose");
         }
         
+}
+
+
+public int getEquipo(){
+    return equipo;
 }
 
 public void añadirpartida(String hola)throws IOException{

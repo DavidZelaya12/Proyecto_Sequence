@@ -10,7 +10,6 @@ import java.util.Random;
 
 public class Tablero extends JPanel {
 
-   
     Player player;
     Main main;
     Juego juego;
@@ -31,7 +30,7 @@ public class Tablero extends JPanel {
     private boolean mover = false;
     private Image tablero;
     Timer timer;
-    
+
     int segundosRestantes;
 
     private int Cartas = 4;
@@ -79,13 +78,13 @@ public class Tablero extends JPanel {
             casillas[10][columnas] = ficha;
             hola.add(casillas[10][columnas].label);
         }
-        
-            timer = new Timer(1000, new ActionListener() {
+
+        timer = new Timer(1000, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 juego.turno().setText("Turno de: " + jugadores.get(turno).getUser());
                 if (segundosRestantes == 0) {
                     ((Timer) e.getSource()).stop(); // Detener el cronómetro cuando llegue a 0
-                    
+
                     turno++;
                     if (turno >= jugadores.size()) {
                         turno = 0;
@@ -107,7 +106,6 @@ public class Tablero extends JPanel {
 
             }
         });
-
 
         MouseAdapter mouseAdapter = new MouseAdapter() {
             @Override
@@ -171,6 +169,7 @@ public class Tablero extends JPanel {
 
         casillas[10][9].setPersonaje(new Cartass("basura", 100, true, null));
 
+        casillas[10][8].setPersonaje(new Cartass("J de diamante", 101, false, null));
         setVisible(true);
     }
 
@@ -184,7 +183,7 @@ public class Tablero extends JPanel {
             BarajaGeneral.remove(hola);
             JOptionPane.showMessageDialog(null, "Se añadio un " + Carta.NombreCarta + " a tu baraja");
 
-        CambiarManos(hi);
+            CambiarManos(hi);
         } else {
             JOptionPane.showMessageDialog(null, "Error: mano llena");
         }
@@ -208,7 +207,7 @@ public class Tablero extends JPanel {
 
     public void comenzarTimer() {
         segundosRestantes = 120;
- 
+
         timer.start();
 
     }
@@ -216,11 +215,11 @@ public class Tablero extends JPanel {
     public void CambiarManos(ArrayList<Cartass> hola) {
         ArrayList<Cartass> cartasJugador = hola;
 
-        if(segundosRestantes==0){
-        timer.stop();
-        comenzarTimer();
+        if (segundosRestantes == 0) {
+            timer.stop();
+            comenzarTimer();
         }
-        
+
         for (int c = 0; c < hola.size(); c++) {
             casillas[10][c].setPersonaje(cartasJugador.get(c));
         }
@@ -291,10 +290,12 @@ public class Tablero extends JPanel {
 
         if (casillas[filanueva][columananueva].Carta != null) {
 
-            Cartass ganador = ValidarFicha(casillaSeleccionada.Carta, casillas[filanueva][columananueva].Carta);
+           Cartass ganador = 
+        ValidarFicha(casillaSeleccionada.Carta, casillas[filanueva][columananueva].Carta,filanueva,columananueva);
 
             if (ganador == null) {
             } else if (casillaSeleccionada.Carta == ganador) {
+                
                 casillaSeleccionada.setPersonaje(null);
                 casillas[filanueva][columananueva].setPersonaje(ganador);
             } else {
@@ -307,11 +308,11 @@ public class Tablero extends JPanel {
 
     }
 
-    public Cartass ValidarFicha(Cartass Atacante, Cartass defensor) {
+    public Cartass ValidarFicha(Cartass Atacante, Cartass defensor, int fila, int columna) {
 
         if (defensor.NumeroCarta == 100) {
             if (EvaluarEliminar(Atacante.NumeroCarta) == true) {
-                JOptionPane.showMessageDialog(null, "Se removio un " + Atacante.NombreCarta+" de tu baraja");
+                JOptionPane.showMessageDialog(null, "Se removio un " + Atacante.NombreCarta + " de tu baraja");
                 getTurno().remove(Atacante);
                 return defensor;
             } else {
@@ -320,15 +321,31 @@ public class Tablero extends JPanel {
 
         }
 
+        if (Atacante.NumeroCarta == 101) {
+            if (defensor.NumeroCarta < 0) {
+                getTurno().remove(Atacante);
+                casillaSeleccionada.setPersonaje(null);
+                casillas[fila][columna].setPersonaje(null);
+                casillas[fila][columna].setPersonaje(defensor.obtenerCartaTablero(defensor.getNombreViejo()));
+                BarajaGeneral.add(defensor.obtenerCartaBaraja(defensor.getNombreViejo()));
+                Resaltar(null);
+                nose.setIcon(Atacante.getIcon());
+                JOptionPane.showMessageDialog(null, "Removiste exitosamente la fichad de un rival!");
+                segundosRestantes = 0;
+                return null;
+            } else {
+                JOptionPane.showMessageDialog(null, "Error: Eliga una carta que contenga una ficha");
+            }
+        }
+
         if (Atacante.NumeroCarta == 102) {
             if (defensor.NumeroCarta > 0) {
                 JOptionPane.showMessageDialog(null, "Usted coloco un " + Atacante.NombreCarta);
-                Atacante.setposicion();
                 getTurno().remove(Atacante);
                 nose.setIcon(Atacante.getIcon());
-                Atacante.setRango();
-                Atacante.setNombre(jugadores.get(turno).getColor());
+                Atacante.SetFicha(jugadores.get(turno).getColor(), jugadores.get(turno).getEquipo());
                 Resaltar(null);
+                segundosRestantes = 0;
                 return Atacante;
             } else {
                 JOptionPane.showMessageDialog(null, "Error: Casilla ocupada");
@@ -338,22 +355,18 @@ public class Tablero extends JPanel {
 
         if (Atacante.NumeroCarta == defensor.NumeroCarta) {
             JOptionPane.showMessageDialog(null, "Usted coloco un " + Atacante.NombreCarta);
-            Atacante.setposicion();
             getTurno().remove(Atacante);
             nose.setIcon(Atacante.getIcon());
-            Atacante.setRango();
-            Atacante.setNombre(jugadores.get(turno).getColor());
+            Atacante.SetFicha(jugadores.get(turno).getColor(), jugadores.get(turno).getEquipo());
             Resaltar(null);
             segundosRestantes = 0;
             return Atacante;
         }
-        
-        
-        if(Atacante.NumeroCarta!=defensor.NumeroCarta){
+
+        if (Atacante.NumeroCarta != defensor.NumeroCarta && Atacante.NumeroCarta < 100) {
             JOptionPane.showMessageDialog(null, "Error: Eliga una carta igual");
         }
-        
-        
+
         return null;
     }
 

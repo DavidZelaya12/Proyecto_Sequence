@@ -11,7 +11,8 @@ import javax.swing.ImageIcon;
 import Proyecto.*;
 
 public class Cartass {
-String NombreCarta;
+
+    String NombreCarta;
     int NumeroCarta;
     boolean p1;
     boolean posicionado = false;
@@ -19,30 +20,26 @@ String NombreCarta;
     ImageIcon iconoEscondido;
     private int dificultad;
     Player player;
+    private int equipo = 0;
+    private String nombreviejo;
 
     public Cartass(String name, int lvl, boolean placed, String path) {
         this.NombreCarta = name;
         this.NumeroCarta = lvl;
         this.p1 = placed;
         this.dificultad = 8;
-
-        try {
-            Image resizedImg = resizeImage(ImageIO.read(new File("src/img/interrogacion.jpg")), 85, 85);
-            iconoEscondido = new ImageIcon(resizedImg);
-        } catch (Exception e) {
-            iconoEscondido = null;
+        this.nombreviejo = name;
+        if (p1 == false || lvl == 100) {
+            loadIcon();
         }
+    }
 
-        try {
-            Image newImg = resizeImage(ImageIO.read(new File(path)), 55, 55);
-            icono = new ImageIcon(newImg);
-        } catch (Exception e) {
-            icono = null;
-        }
-
-        if(p1==false || lvl==100){
+    public void SetFicha(String color, int team) {
+        p1 = true;
+        equipo = team;
+        NumeroCarta = -1;
+        NombreCarta = "Ficha" + color;
         loadIcon();
-        }
     }
 
     public void setposicion() {
@@ -58,10 +55,10 @@ String NombreCarta;
     }
 
     private void loadIcon() {
-        String NombreFoto="";
-        
-        if(p1==false || NumeroCarta==100 || NumeroCarta==-1){
-        NombreFoto = "src/img/" + NombreCarta + ".png";
+        String NombreFoto = "";
+
+        if (p1 == false || NumeroCarta == 100 || NumeroCarta == -1) {
+            NombreFoto = "src/img/" + NombreCarta + ".png";
         }
         try {
             Image newImg = resizeImage(ImageIO.read(new File(NombreFoto)), 60, 55);
@@ -70,8 +67,8 @@ String NombreCarta;
             icono = null;
         }
     }
-    
-    public ImageIcon getIcon(){
+
+    public ImageIcon getIcon() {
         return icono;
     }
 
@@ -84,6 +81,34 @@ String NombreCarta;
         g2.dispose();
 
         return resizedImg;
+    }
+
+    public String getNombreViejo() {
+        return nombreviejo;
+    }
+
+    public Cartass obtenerCartaBaraja(String nombre) {
+        ArrayList<Cartass> personajes = CartasBaraja();
+        
+        for (int i = 0; i < personajes.size(); i++) {
+            if (personajes.get(i).nombreviejo.equals(nombre)) {
+                System.out.println("Se agrego"+personajes.get(i).NombreCarta);
+                return personajes.get(i);
+            }
+        }
+        return null;
+    }
+    
+    public Cartass obtenerCartaTablero(String nombre) {
+        ArrayList<Cartass> personajes = CartasTablero();
+        
+        for (int i = 0; i < personajes.size(); i++) {
+            if (personajes.get(i).nombreviejo.equals(nombre)) {
+                System.out.println("Se agrego"+personajes.get(i).NombreCarta);
+                return personajes.get(i);
+            }
+        }
+        return null;
     }
 
     public static ArrayList<Cartass> CartasTablero() {
@@ -312,26 +337,20 @@ String NombreCarta;
         personajes.add(new Cartass("8 de diamante", 30, false, null));
         personajes.add(new Cartass("7 de diamante", 24, false, null));
         personajes.add(new Cartass("6 de diamante", 23, false, null));
-        
+
         //Un ojo
         personajes.add(new Cartass("J de corazones", 101, false, null));
         personajes.add(new Cartass("J de corazones", 101, false, null));
         personajes.add(new Cartass("J de Picas", 102, false, null));
         personajes.add(new Cartass("J de Picas", 102, false, null));
-       
+
         //2 ojo
         personajes.add(new Cartass("J de diamante", 101, false, null));
         personajes.add(new Cartass("J de diamante", 101, false, null));
         personajes.add(new Cartass("J de Trebol", 102, false, null));
         personajes.add(new Cartass("J de Trebol", 102, false, null));
-        
-        
-        return personajes;
-    }
 
-    public void setNombre(String color) {
-    NombreCarta = "Ficha"+color;
-    loadIcon();
+        return personajes;
     }
 
 }
