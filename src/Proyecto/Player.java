@@ -32,6 +32,10 @@ public Player(String user,String password){
         
 }
 
+public void setEquipo(int i){
+    equipo=i;
+}
+
 
 public int getEquipo(){
     return equipo;
@@ -42,15 +46,18 @@ public void añadirpartida(String hola)throws IOException{
     logs.writeUTF(hola);
 }
 
-public String retornarPartidas()throws IOException{
-    String nose="";
+public String[] retornarPartidas()throws IOException{
+    String[] nose=new String[100];
     
     logs.seek(0);
-    
+    int i=0;
     while(logs.getFilePointer()<logs.length()){
-        nose+=logs.readUTF()+"\n";
+        nose[i]=logs.readUTF();
+        i++;
     }
-    
+    for (int r = 0; r < nose.length; r++) {
+        nose[r] = partidas[partidas.length - r - 1];
+    }
     return nose;
 }
 

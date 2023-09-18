@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import Proyecto.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
@@ -18,8 +19,8 @@ public class Tablero extends JPanel {
     ArrayList<Cartass> BarajaGeneral = Cartass.CartasBaraja();
 
     ArrayList<Player> jugadores;
-    
-   private int sequencias;
+
+    private int sequencias;
 
     private JTextArea txtAreaEliminados;
     private JPanel hi;
@@ -176,7 +177,7 @@ public class Tablero extends JPanel {
 
     public void añadirCarta(ArrayList<Cartass> hi) {
         Random random = new Random();
-
+        if(BarajaGeneral.size()>0){
         if (hi.size() < Cartas) {
             int hola = random.nextInt(hi.size());
             Cartass Carta = BarajaGeneral.get(hola);
@@ -188,7 +189,9 @@ public class Tablero extends JPanel {
         } else {
             JOptionPane.showMessageDialog(null, "Error: mano llena");
         }
-
+        }else{
+            JOptionPane.showMessageDialog(null, "Error: Ya no quedan cartas en la baraja");
+        }
     }
 
     public void RepartirCartas() {
@@ -196,6 +199,7 @@ public class Tablero extends JPanel {
         Random random = new Random();
 
         for (int a = 0; a < jugadores.size(); a++) {
+            jugadores.get(a).getBaraja().clear();
             for (int i = 0; i < Cartas; i++) {
                 int hola = random.nextInt(BarajaGeneral.size());
                 Cartass ficha = BarajaGeneral.get(hola);
@@ -215,7 +219,7 @@ public class Tablero extends JPanel {
 
     public void CambiarManos(ArrayList<Cartass> hola) {
         ArrayList<Cartass> cartasJugador = hola;
-        
+
         if (segundosRestantes == 0) {
             timer.stop();
             comenzarTimer();
@@ -289,6 +293,7 @@ public class Tablero extends JPanel {
     private void moverPersonaje(int filanueva, int columananueva) {
         String TurnoDeUsuario = Turnos.getText();
 
+        if(getTurno().size()==Cartas){
         if (casillas[filanueva][columananueva].Carta != null) {
 
             Cartass ganador
@@ -296,19 +301,25 @@ public class Tablero extends JPanel {
 
             if (ganador == null) {
             } else if (casillaSeleccionada.Carta == ganador) {
-
                 casillaSeleccionada.setPersonaje(null);
                 casillas[filanueva][columananueva].setPersonaje(ganador);
-                verificarGanador(filanueva,columananueva);
+                verificarGanador(filanueva, columananueva);
+                if (verificarGanador(filanueva, columananueva)) {
+                    Win();
+                } else {
+                    segundosRestantes = 0;
+                }
             } else {
                 casillaSeleccionada.setPersonaje(null);
             }
             return;
         }
+        }else{
+            JOptionPane.showMessageDialog(null, "Antes de continuar, anexe cartas a su mazo");
+        }
     }
-    
 
-    private boolean verificarGanador(int f,int c) {
+    private boolean verificarGanador(int f, int c) {
         int conexionesFilas = 0;
         int conexionesColumnas = 0;
         int conexionesDiagonales = 0;
@@ -320,22 +331,22 @@ public class Tablero extends JPanel {
             int rangoCartaAnterior = -2; // Inicializado con un valor que no puede existir
             for (int columna = 0; columna < 10; columna++) {
                 Cartass cartaActual = casillas[fila][columna].Carta;
-                if (cartaActual != null && cartaActual.NumeroCarta >0) {
+                if (cartaActual != null && cartaActual.NumeroCarta > 0) {
                     contadorCartasEnFila = 0;
                     rangoCartaAnterior = cartaActual.NumeroCarta;
-                    Nose(false,0,0);
-                } else if (cartaActual.getEquipo() == equipoActual || cartaActual.NumeroCarta==0) {
+                    Nose(false, 0, 0);
+                } else if (cartaActual.getEquipo() == equipoActual || cartaActual.NumeroCarta == 0) {
                     contadorCartasEnFila++;
-                    cartaActual.NumeroCarta=-5;
+                    cartaActual.NumeroCarta = -5;
                 } else {
                     contadorCartasEnFila = 0;
                     rangoCartaAnterior = -2; // Reiniciar el contador si encontramos una casilla vacía
-                    Nose(false,0,0);
+                    Nose(false, 0, 0);
                 }
 
                 if (contadorCartasEnFila >= 5) {
                     conexionesFilas++;
-                    Nose(true,f,c);
+                    Nose(true, f, c);
                     sequencias++;
                 }
             }
@@ -347,22 +358,22 @@ public class Tablero extends JPanel {
             int rangoCartaAnterior = -2;
             for (int fila = 0; fila < 10; fila++) {
                 Cartass cartaActual = casillas[fila][columna].Carta;
-                if (cartaActual != null && cartaActual.NumeroCarta >0) {
+                if (cartaActual != null && cartaActual.NumeroCarta > 0) {
                     contadorCartasEnColumna = 0;
                     rangoCartaAnterior = cartaActual.NumeroCarta;
-                    Nose(false,0,0);
-                } else if (cartaActual.getEquipo() == equipoActual|| cartaActual.NumeroCarta==0) {
+                    Nose(false, 0, 0);
+                } else if (cartaActual.getEquipo() == equipoActual || cartaActual.NumeroCarta == 0) {
                     contadorCartasEnColumna++;
-                    cartaActual.NumeroCarta=-5;
+                    cartaActual.NumeroCarta = -5;
                 } else {
                     rangoCartaAnterior = -2;
                     contadorCartasEnColumna = 0;
-                    Nose(false,0,0);
+                    Nose(false, 0, 0);
                 }
 
                 if (contadorCartasEnColumna >= 5) {
                     conexionesColumnas++;
-                    Nose(true,f,c);
+                    Nose(true, f, c);
                     sequencias++;
                 }
             }
@@ -375,22 +386,22 @@ public class Tablero extends JPanel {
                 int rangoCartaAnterior = -2;
                 for (int i = 0; i < 5; i++) {
                     Cartass cartaActual = casillas[fila + i][columna + i].Carta;
-                    if (cartaActual != null && cartaActual.NumeroCarta >0) {
+                    if (cartaActual != null && cartaActual.NumeroCarta > 0) {
                         contadorDiagonal = 0;
                         rangoCartaAnterior = cartaActual.NumeroCarta;
-                        Nose(false,0,0);
-                    } else if (cartaActual.getEquipo() == equipoActual|| cartaActual.NumeroCarta==0) {
+                        Nose(false, 0, 0);
+                    } else if (cartaActual.getEquipo() == equipoActual || cartaActual.NumeroCarta == 0) {
                         contadorDiagonal++;
-                        cartaActual.NumeroCarta=-5;
+                        cartaActual.NumeroCarta = -5;
                     } else {
                         contadorDiagonal = 0;
                         rangoCartaAnterior = -2;
-                        Nose(false,0,0);
+                        Nose(false, 0, 0);
                     }
 
                     if (contadorDiagonal >= 5) {
                         conexionesDiagonales++;
-                        Nose(true,f,c);
+                        Nose(true, f, c);
                         sequencias++;
                     }
                 }
@@ -404,60 +415,59 @@ public class Tablero extends JPanel {
                 int rangoCartaAnterior = -2;
                 for (int i = 0; i < 5; i++) {
                     Cartass cartaActual = casillas[fila + i][columna - i].Carta;
-                    if (cartaActual != null && cartaActual.NumeroCarta>0) {
+                    if (cartaActual != null && cartaActual.NumeroCarta > 0) {
                         contadorDiagonal = 0;
                         rangoCartaAnterior = cartaActual.NumeroCarta;
-                        Nose(false,0,0);
-                    } else if (cartaActual.getEquipo() == equipoActual|| cartaActual.NumeroCarta==0) {
+                        Nose(false, 0, 0);
+                    } else if (cartaActual.getEquipo() == equipoActual || cartaActual.NumeroCarta == 0) {
                         contadorDiagonal++;
-                        cartaActual.NumeroCarta=-5;
+                        cartaActual.NumeroCarta = -5;
                     } else {
                         contadorDiagonal = 0;
                         rangoCartaAnterior = -2;
-                        Nose(false,0,0);
+                        Nose(false, 0, 0);
                     }
 
                     if (contadorDiagonal >= 5) {
                         conexionesDiagonales++;
-                        Nose(true,f,c);
+                        Nose(true, f, c);
                         sequencias++;
                     }
                 }
             }
         }
-        if(sequencias>=2){
-            JOptionPane.showMessageDialog(null, "GANASTE");
+        if (sequencias >= 2) {
             return true;
-        }else
-        return false;
+        } else {
+            return false;
+        }
     }
-    
-    
-        public void Nose(boolean hola,int f,int c) {
-            
-            if(hola==true){
-                //Resalta
-        for (int filas = 0; filas < 10; filas++) {
-            for (int columnas = 0; columnas < 10; columnas++) {
-                if(casillas[filas][columnas].Carta.NumeroCarta==-5){
-                    casillas[filas][columnas].Carta.NumeroCarta=1000;
-                    casillas[filas][columnas].secuencia();
+
+    public void Nose(boolean hola, int f, int c) {
+
+        if (hola == true) {
+            //Resalta
+            for (int filas = 0; filas < 10; filas++) {
+                for (int columnas = 0; columnas < 10; columnas++) {
+                    if (casillas[filas][columnas].Carta.NumeroCarta == -5) {
+                        casillas[filas][columnas].Carta.NumeroCarta = 1000;
+                        casillas[filas][columnas].secuencia();
+                    }
                 }
             }
-            }
-        casillas[f][c].Carta.NumeroCarta=1000;
-        casillas[f][c].secuencia();
-            }else{
-                //Restablece
-        for (int filas = 0; filas < 10; filas++) {
-            for (int columnas = 0; columnas < 10; columnas++) {
-                if(casillas[filas][columnas].Carta.NumeroCarta==-5){
-                    casillas[filas][columnas].Carta.NumeroCarta=-1;
+            casillas[f][c].Carta.NumeroCarta = 1000;
+            casillas[f][c].secuencia();
+        } else {
+            //Restablece
+            for (int filas = 0; filas < 10; filas++) {
+                for (int columnas = 0; columnas < 10; columnas++) {
+                    if (casillas[filas][columnas].Carta.NumeroCarta == -5) {
+                        casillas[filas][columnas].Carta.NumeroCarta = -1;
+                    }
                 }
-            }
-            }
             }
         }
+    }
 
     public Cartass ValidarFicha(Cartass Atacante, Cartass defensor, int fila, int columna) {
 
@@ -473,7 +483,7 @@ public class Tablero extends JPanel {
         }
 
         if (Atacante.NumeroCarta == 101) {
-            if(defensor.NumeroCarta==1000){
+            if (defensor.NumeroCarta == 1000) {
                 JOptionPane.showMessageDialog(null, "Error: Esta ficha esta en una secuencia");
             }
             if (defensor.NumeroCarta < 0) {
@@ -485,7 +495,7 @@ public class Tablero extends JPanel {
                 Resaltar(null);
                 nose.setIcon(Atacante.getIcon());
                 JOptionPane.showMessageDialog(null, "Removiste exitosamente la fichad de un rival!");
-                segundosRestantes = 0;
+                //segundosRestantes = 0;
                 return null;
             } else {
                 JOptionPane.showMessageDialog(null, "Error: Eliga una carta que contenga una ficha");
@@ -500,7 +510,7 @@ public class Tablero extends JPanel {
                     nose.setIcon(Atacante.getIcon());
                     Atacante.SetFicha(jugadores.get(turno).getColor(), jugadores.get(turno).getEquipo());
                     Resaltar(null);
-                    segundosRestantes = 0;
+                    //segundosRestantes = 0;
                     return Atacante;
                 } else {
                     JOptionPane.showMessageDialog(null, "Error: no puedes quitar las fichas de tus aliados");
@@ -517,7 +527,7 @@ public class Tablero extends JPanel {
             nose.setIcon(Atacante.getIcon());
             Atacante.SetFicha(jugadores.get(turno).getColor(), jugadores.get(turno).getEquipo());
             Resaltar(null);
-            segundosRestantes = 0;
+            //segundosRestantes = 0;
             return Atacante;
         }
 
@@ -541,6 +551,20 @@ public class Tablero extends JPanel {
 
     public void Win() {
 
+        for(Player jugadorActual:jugadores){
+            try{             
+            if(jugadorActual.getEquipo()==jugadores.get(turno).getEquipo()){
+                jugadorActual.añadirpartida(jugadorActual.getUser()+"Gano junto al equipo"+jugadores.get(turno).getEquipo());
+            }else{
+                jugadorActual.añadirpartida(jugadorActual.getUser()+"Perdio junto al equipo"+jugadores.get(turno).getEquipo());
+            
+            }
+            }catch (IOException e){
+                
+            }
+        }
+        
+        
         main.llamarmenu(player, main);
         juego.dispose();
 
