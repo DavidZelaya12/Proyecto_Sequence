@@ -10,8 +10,6 @@ public class Menu extends javax.swing.JFrame {
         this.player=player;
         this.main=main;
     }
-
-    
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
