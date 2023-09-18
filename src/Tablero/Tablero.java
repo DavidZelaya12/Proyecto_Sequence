@@ -20,8 +20,9 @@ public class Tablero extends JPanel {
 
     ArrayList<Player> jugadores;
 
-    private int sequencias;
-
+    private int SequenciasEquipo1;
+    private int SequenciasEquipo2;
+    private int SequenciasEquipo3;
     private JTextArea txtAreaEliminados;
     private JPanel hi;
 
@@ -39,6 +40,7 @@ public class Tablero extends JPanel {
     private int Cartas = 4;
     private int turno = 0;
     JLabel nose;
+
     boolean HayGanador;
 
     @Override
@@ -49,7 +51,7 @@ public class Tablero extends JPanel {
         g.drawImage(tablero, 0, 0, getWidth(), getHeight(), this);
     }
 
-    public Tablero(Player player, Main main, JTextArea txtAreaEliminados, JLabel Turnos, Juego juego, JPanel hola, JLabel x) {
+    public Tablero(Player player, Main main, JTextArea txtAreaEliminados, JLabel Turnos, Juego juego, JPanel hola, JLabel x, ArrayList<Player> Players) {
 
         segundosRestantes = 0;
         this.player = player;
@@ -60,7 +62,7 @@ public class Tablero extends JPanel {
         this.juego = juego;
         this.hi = hola;
 
-        jugadores = Funciones.getPlayers();
+        jugadores = Players;
 
         setLayout(new GridLayout(10, 10));
         hi.setLayout(new GridLayout(1, Cartas + 1));
@@ -177,19 +179,19 @@ public class Tablero extends JPanel {
 
     public void añadirCarta(ArrayList<Cartass> hi) {
         Random random = new Random();
-        if(BarajaGeneral.size()>0){
-        if (hi.size() < Cartas) {
-            int hola = random.nextInt(hi.size());
-            Cartass Carta = BarajaGeneral.get(hola);
-            hi.add(Carta);
-            BarajaGeneral.remove(hola);
-            JOptionPane.showMessageDialog(null, "Se añadio un " + Carta.NombreCarta + " a tu baraja");
+        if (BarajaGeneral.size() > 0) {
+            if (hi.size() < Cartas) {
+                int hola = random.nextInt(hi.size());
+                Cartass Carta = BarajaGeneral.get(hola);
+                hi.add(Carta);
+                BarajaGeneral.remove(hola);
+                JOptionPane.showMessageDialog(null, "Se añadio un " + Carta.NombreCarta + " a tu baraja");
 
-            CambiarManos(hi);
+                CambiarManos(hi);
+            } else {
+                JOptionPane.showMessageDialog(null, "Error: mano llena");
+            }
         } else {
-            JOptionPane.showMessageDialog(null, "Error: mano llena");
-        }
-        }else{
             JOptionPane.showMessageDialog(null, "Error: Ya no quedan cartas en la baraja");
         }
     }
@@ -293,30 +295,47 @@ public class Tablero extends JPanel {
     private void moverPersonaje(int filanueva, int columananueva) {
         String TurnoDeUsuario = Turnos.getText();
 
-        if(getTurno().size()==Cartas){
-        if (casillas[filanueva][columananueva].Carta != null) {
+        if (getTurno().size() == Cartas) {
+            if (casillas[filanueva][columananueva].Carta != null) {
 
-            Cartass ganador
-                    = ValidarFicha(casillaSeleccionada.Carta, casillas[filanueva][columananueva].Carta, filanueva, columananueva);
+                Cartass ganador
+                        = ValidarFicha(casillaSeleccionada.Carta, casillas[filanueva][columananueva].Carta, filanueva, columananueva);
 
-            if (ganador == null) {
-            } else if (casillaSeleccionada.Carta == ganador) {
-                casillaSeleccionada.setPersonaje(null);
-                casillas[filanueva][columananueva].setPersonaje(ganador);
-                verificarGanador(filanueva, columananueva);
-                if (verificarGanador(filanueva, columananueva)) {
-                    Win();
+                if (ganador == null) {
+                } else if (casillaSeleccionada.Carta == ganador) {
+                    casillaSeleccionada.setPersonaje(null);
+                    casillas[filanueva][columananueva].setPersonaje(ganador);
+                    verificarGanador(filanueva, columananueva);
+                    if (verificarGanador(filanueva, columananueva)) {
+                        Win();
+                    } else {
+                        segundosRestantes = 0;
+                    }
                 } else {
-                    segundosRestantes = 0;
+                    casillaSeleccionada.setPersonaje(null);
                 }
-            } else {
-                casillaSeleccionada.setPersonaje(null);
+                return;
             }
-            return;
-        }
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "Antes de continuar, anexe cartas a su mazo");
         }
+    }
+
+    public boolean AñadirSequencia(int equipo) {
+
+        int pruebaa = 0;
+        for (int filas = 0; filas < 10; filas++) {
+            for (int columnas = 0; columnas < 10; columnas++) {
+                if (casillas[filas][columnas].Carta.NumeroCarta == 1000 && casillas[filas][columnas].Carta.getEquipo() == equipo) {
+                    pruebaa++;
+                }
+            }
+        }
+
+        if (pruebaa == 10) {
+            return true;
+        }
+        return false;
     }
 
     private boolean verificarGanador(int f, int c) {
@@ -347,7 +366,6 @@ public class Tablero extends JPanel {
                 if (contadorCartasEnFila >= 5) {
                     conexionesFilas++;
                     Nose(true, f, c);
-                    sequencias++;
                 }
             }
         }
@@ -374,7 +392,6 @@ public class Tablero extends JPanel {
                 if (contadorCartasEnColumna >= 5) {
                     conexionesColumnas++;
                     Nose(true, f, c);
-                    sequencias++;
                 }
             }
         }
@@ -402,7 +419,6 @@ public class Tablero extends JPanel {
                     if (contadorDiagonal >= 5) {
                         conexionesDiagonales++;
                         Nose(true, f, c);
-                        sequencias++;
                     }
                 }
             }
@@ -431,16 +447,15 @@ public class Tablero extends JPanel {
                     if (contadorDiagonal >= 5) {
                         conexionesDiagonales++;
                         Nose(true, f, c);
-                        sequencias++;
                     }
                 }
             }
         }
-        if (sequencias >= 2) {
+        if (AñadirSequencia(jugadores.get(turno).getEquipo())) {
             return true;
-        } else {
-            return false;
-        }
+        }else
+        return false;
+
     }
 
     public void Nose(boolean hola, int f, int c) {
@@ -550,21 +565,20 @@ public class Tablero extends JPanel {
     }
 
     public void Win() {
+        JOptionPane.showMessageDialog(null, "Ganaste");
+        for (Player jugadorActual : jugadores) {
+            try {
+                if (jugadorActual.getEquipo() == jugadores.get(turno).getEquipo()) {
+                    jugadorActual.añadirpartida(jugadorActual.getUser() + "Gano junto al equipo" + jugadores.get(turno).getEquipo());
+                } else {
+                    jugadorActual.añadirpartida(jugadorActual.getUser() + "Perdio junto al equipo" + jugadores.get(turno).getEquipo());
 
-        for(Player jugadorActual:jugadores){
-            try{             
-            if(jugadorActual.getEquipo()==jugadores.get(turno).getEquipo()){
-                jugadorActual.añadirpartida(jugadorActual.getUser()+"Gano junto al equipo"+jugadores.get(turno).getEquipo());
-            }else{
-                jugadorActual.añadirpartida(jugadorActual.getUser()+"Perdio junto al equipo"+jugadores.get(turno).getEquipo());
-            
-            }
-            }catch (IOException e){
-                
+                }
+            } catch (IOException e) {
+
             }
         }
-        
-        
+
         main.llamarmenu(player, main);
         juego.dispose();
 

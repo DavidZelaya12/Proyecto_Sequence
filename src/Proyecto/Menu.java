@@ -1,5 +1,7 @@
 package Proyecto;
 
+import Tablero.Juego;
+
 public class Menu extends javax.swing.JFrame {
     
     Player player;
@@ -149,8 +151,7 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Oponente p2=new Oponente(player,main);
-        p2.setVisible(true);
+        new Oponente(player,main).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -160,7 +161,7 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
+       new VerPartidas(main,player).setVisible(true);
     }//GEN-LAST:event_jButton3ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

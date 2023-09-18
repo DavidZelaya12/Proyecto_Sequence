@@ -7,6 +7,8 @@ import java.util.ArrayList;
 
 public class Player {
     
+    public int sequencias=0;
+    
     private String username;
     private String contra;
     private int puntos;
@@ -14,8 +16,13 @@ public class Player {
     private String oponente;
     ArrayList<Cartass>baraja;
     public String color="Amarilla";
-     private int equipo=1;
+     int equipo=1;
     RandomAccessFile logs;
+    int CantJugadores=4;
+    int cantEquipos=2;
+    int cartas=7;
+    boolean ColoresEquipo=false;
+    
     
 public Player(String user,String password){
     this.username=user;
@@ -32,10 +39,20 @@ public Player(String user,String password){
         
 }
 
+
+public void SetCantidades(int Cantidad,int cartas,int teams){
+ this.cantEquipos=teams;
+ this.CantJugadores=Cantidad;
+ this.cartas=cartas;
+}
+
 public void setEquipo(int i){
     equipo=i;
 }
 
+public int getSecuencias(){
+    return sequencias;
+}
 
 public int getEquipo(){
     return equipo;
@@ -46,6 +63,10 @@ public void añadirpartida(String hola)throws IOException{
     logs.writeUTF(hola);
 }
 
+public void agregarSecuencia(int secuencia){
+  sequencias+=secuencia;  
+}
+
 public String[] retornarPartidas()throws IOException{
     String[] nose=new String[100];
     
@@ -54,9 +75,6 @@ public String[] retornarPartidas()throws IOException{
     while(logs.getFilePointer()<logs.length()){
         nose[i]=logs.readUTF();
         i++;
-    }
-    for (int r = 0; r < nose.length; r++) {
-        nose[r] = partidas[partidas.length - r - 1];
     }
     return nose;
 }
