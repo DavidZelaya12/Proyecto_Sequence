@@ -8,6 +8,7 @@ public class Funciones {
     private static Player[] players;
     private static int tamaño;
     RandomAccessFile Usuarios;
+    private static int cantPlayers = 2;
 
     public Funciones() {
         players = new Player[100];
@@ -99,7 +100,13 @@ public class Funciones {
 
         return BuscarOponente(usuario, i + 1);
     }
-
+    
+    public int getCant(){
+        return cantPlayers;
+    }
+    public void setCant(int cant){
+        cantPlayers = cant;
+    }
 
 }
 
