@@ -14,7 +14,7 @@ public class Player {
     private String oponente;
     ArrayList<Cartass>baraja;
     public String color="Amarilla";
-     private int equipo=0;
+     private int equipo=1;
     RandomAccessFile logs;
     
 public Player(String user,String password){

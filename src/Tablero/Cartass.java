@@ -45,6 +45,10 @@ public class Cartass {
     public void setposicion() {
         p1 = true;
     }
+    
+    public int getEquipo(){
+        return equipo;
+    }
 
     public void setRango() {
         NumeroCarta = -1;

@@ -27,6 +27,9 @@ public class Casillas {
         return coloreada;
     }
 
+    public void secuencia(){
+        label.setBorder(BorderFactory.createLineBorder(Color.ORANGE,5));
+    }
 
     public void CambiarColor(boolean activar) {
         if (activar) {
